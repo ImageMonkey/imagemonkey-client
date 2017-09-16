@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>source/qml/main.qml</file>
+        <file>source/qml/items/DonatePictureItem.qml</file>
+        <file>source/qml/items/ValidatePictureItem.qml</file>
+        <file>source/qml/basiccomponents/MaterialButton.qml</file>
+        <file>source/qml/basiccomponents/MaterialIcon.qml</file>
+        <file>source/qml/effects/RippleEffect.qml</file>
+        <file>source/fonts/fontawesome-webfont.ttf</file>
+        <file>source/fonts/material-design-icons.ttf</file>
+        <file>source/qml/basiccomponents/LoadingIndicator.qml</file>
+        <file>source/qml/basiccomponents/ProgressLoadingBar.qml</file>
+        <file>source/qml/basiccomponents/Toast.qml</file>
+    </qresource>
+</RCC>
