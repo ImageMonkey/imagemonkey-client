@@ -15,14 +15,18 @@ Item{
         property string imageId: "";
         property var pendingRequests
         property bool initialized: false;
+        property var labels;
     }
 
     onIsActive: {
         if(!internal.initialized){
             internal.pendingRequests = {};
+            internal.labels = [];
+
+            restAPI.getLabels();
+
             internal.initialized = true;
         }
-        restAPI.getRandomLabel();
     }
 
     NativeFileDialog {
@@ -43,12 +47,21 @@ Item{
         id: restAPI
         signal donatePicture();
         signal getRandomLabel();
+        signal getLabels();
+
+        onGetLabels: {
+            loadingIndicator.visible = true;
+            var labelsRequest = Qt.createQmlObject('import com.imagemonkey.imagemonkey 1.0; GetAllPictureLabelsRequest{}',
+                                                   restAPI);
+            internal.pendingRequests[labelsRequest.getUniqueRequestId()] = "allLabels";
+            restAPI.get(labelsRequest);
+        }
 
         onDonatePicture: {
             loadingIndicator.visible = true;
             var donatePictureRequest = Qt.createQmlObject('import com.imagemonkey.imagemonkey 1.0; DonatePictureRequest{}',
                                                    restAPI);
-            donatePictureRequest.set(imagePicker.fileUrl, label.text);
+            donatePictureRequest.set(imagePicker.fileUrl, labels.currentText);
             internal.pendingRequests[donatePictureRequest.getUniqueRequestId()] = "donateImg";
             restAPI.post(donatePictureRequest);
         }
@@ -68,9 +81,12 @@ Item{
             if(errorCode === 0){
                 if(uniqueRequestId in internal.pendingRequests){
                     var reqType = internal.pendingRequests[uniqueRequestId];
-                    if(reqType === "randomLabel"){
-                        var data = JSON.parse(result);
-                        label.text = data["label"];
+                    if(reqType === "allLabels"){
+                        var labelsData = JSON.parse(result);
+                        for(var i = 0; i < labelsData.length; i++){
+                            internal.labels.push(labelsData[i]["name"]);
+                        }
+                        labels.model = internal.labels;
                         loadingIndicator.visible = false;
                     }
                     else if(reqType === "donateImg"){
@@ -79,8 +95,6 @@ Item{
                         selectPictureButton.visible = true;
                         loadingIndicator.visible = false;
                         toast.show(qsTr("Successfully uploaded picture"), 2000);
-
-                        restAPI.getRandomLabel(); //request another random label
                     }
 
                     delete internal.pendingRequests[uniqueRequestId];
@@ -98,18 +112,36 @@ Item{
         }
     }
 
-    Text{
-        id: label
+    ComboBox{
+        id: labels
         anchors.top: parent.top
         anchors.topMargin: 5 * settings.pixelDensity
         anchors.horizontalCenter: parent.horizontalCenter
-        horizontalAlignment: Text.AlignHCenter
-        font.pixelSize: 10 * settings.pixelDensity
-        font.bold: true
     }
+
+    RoundButton{
+        id: randomLabelButton
+        font.family: materialDesignLoader.name
+        text: "\ue043"
+        anchors.verticalCenter: labels.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: 5 * settings.pixelDensity
+        width: 16 * settings.pixelDensity
+        height: 16 * settings.pixelDensity
+        font.pixelSize: 8 * settings.pixelDensity
+        Material.foreground: "white"
+        Material.background: "#FF9800"
+        onClicked: {
+            var randomNumber = Math.floor(Math.random() * (internal.labels.length - 1)) + 0
+            labels.currentIndex = randomNumber;
+        }
+    }
+
+
+
     Text{
         id: labelDescription
-        anchors.top: label.bottom
+        anchors.top: labels.bottom
         anchors.topMargin: 3 * settings.pixelDensity
         anchors.horizontalCenter: parent.horizontalCenter
         horizontalAlignment: Text.AlignHCenter
@@ -123,14 +155,15 @@ Item{
         id: selectPictureButton
         anchors.centerIn: parent
         text: "\ue432"
-        backgroundColor: "black"
-        font.pixelSize: 40 * settings.pixelDensity
+        backgroundColor: "transparent"
+        highlightColor: "black"
+        font.pixelSize: 50 * settings.pixelDensity
         onClicked: imagePicker.open();
     }
 
     Image{
         id: img
-        anchors.top: label.bottom
+        anchors.top: labels.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: infoText.top

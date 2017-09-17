@@ -26,6 +26,13 @@ public:
     ~GetRandomPictureLabelRequest();
 };
 
+class GetAllPictureLabelsRequest : public BasicRequest{
+    Q_OBJECT
+public:
+    GetAllPictureLabelsRequest();
+    ~GetAllPictureLabelsRequest();
+};
+
 class ValidatePictureRequest : public BasicRequest{
     Q_OBJECT
 public:

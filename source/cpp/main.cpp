@@ -64,7 +64,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    qmlRegisterType<GetRandomPictureLabelRequest>(g_uri.toStdString().c_str(), 1, 0, "GetRandomPictureLabelRequest");
+    qmlRegisterType<GetRandomPictureLabelRequest>(g_uri.toStdString().c_str(), 1, 0, "GetRandomPictureLabelRequest");   
+    qmlRegisterType<GetAllPictureLabelsRequest>(g_uri.toStdString().c_str(), 1, 0, "GetAllPictureLabelsRequest");
     qmlRegisterType<GetRandomPictureRequest>(g_uri.toStdString().c_str(), 1, 0, "GetRandomPictureRequest");
     qmlRegisterType<DonatePictureRequest>(g_uri.toStdString().c_str(), 1, 0, "DonatePictureRequest");
     qmlRegisterType<ValidatePictureRequest>(g_uri.toStdString().c_str(), 1, 0, "ValidatePictureRequest");

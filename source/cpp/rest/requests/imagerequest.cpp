@@ -73,9 +73,19 @@ ValidatePictureRequest::~ValidatePictureRequest(){
 GetRandomPictureLabelRequest::GetRandomPictureLabelRequest()
     : BasicRequest()
 {
-    QUrl url(m_baseUrl + "label");
+    QUrl url(m_baseUrl + "label/random");
     m_request->setUrl(url);
 }
 
 GetRandomPictureLabelRequest::~GetRandomPictureLabelRequest(){
+}
+
+GetAllPictureLabelsRequest::GetAllPictureLabelsRequest()
+    : BasicRequest()
+{
+    QUrl url(m_baseUrl + "label");
+    m_request->setUrl(url);
+}
+
+GetAllPictureLabelsRequest::~GetAllPictureLabelsRequest(){
 }
