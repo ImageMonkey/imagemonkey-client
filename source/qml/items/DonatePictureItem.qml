@@ -24,8 +24,6 @@ Item{
             internal.labels = [];
 
             restAPI.getLabels();
-
-            internal.initialized = true;
         }
     }
 
@@ -86,6 +84,8 @@ Item{
                         for(var i = 0; i < labelsData.length; i++){
                             internal.labels.push(labelsData[i]["name"]);
                         }
+                        internal.initialized = true;
+                        selectPictureButton.visible = true;
                         labels.model = internal.labels;
                         loadingIndicator.visible = false;
                     }
@@ -154,6 +154,7 @@ Item{
     MaterialButton{
         id: selectPictureButton
         anchors.centerIn: parent
+        visible: false
         text: "\ue432"
         backgroundColor: "transparent"
         highlightColor: "black"
@@ -163,12 +164,14 @@ Item{
 
     Image{
         id: img
-        anchors.top: labels.bottom
+        anchors.top: labelDescription.bottom
+        anchors.topMargin: 2 * settings.pixelDensity
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: infoText.top
         fillMode: Image.PreserveAspectFit
         visible: false
+        asynchronous: true
         MouseArea{
             anchors.fill: parent
             onClicked: {
@@ -200,7 +203,7 @@ Item{
         width: 50 * settings.pixelDensity
         height: 17 * settings.pixelDensity
         text: qsTr("UPLOAD")
-        visible: (img.visible && (label.text !== ""))
+        visible: (img.visible && (labels.currentText !== ""))
         Material.foreground: "white"
         Material.background: "#FF9800"
         onClicked: {

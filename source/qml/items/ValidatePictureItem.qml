@@ -105,6 +105,7 @@ Item{
         anchors.bottom: yesButton.top
         anchors.bottomMargin: 5 * settings.pixelDensity
         fillMode: Image.PreserveAspectFit
+        asynchronous: true
     }
 
     Button{
