@@ -63,7 +63,7 @@ ValidatePictureRequest::ValidatePictureRequest()
 }
 
 void ValidatePictureRequest::set(const QString& id, const bool valid){
-    QUrl url(m_baseUrl + "validate/" + id + "/" + ((valid) ? "yes" : "no"));
+    QUrl url(m_baseUrl + "donation/" + id + "/validate/" + ((valid) ? "yes" : "no"));
     m_request->setUrl(url);
 }
 
