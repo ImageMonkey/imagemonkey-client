@@ -82,7 +82,7 @@ Item{
                     if(reqType === "allLabels"){
                         var labelsData = JSON.parse(result);
                         for(var i = 0; i < labelsData.length; i++){
-                            internal.labels.push(labelsData[i]["name"]);
+                            internal.labels.push(labelsData[i]);
                         }
                         internal.initialized = true;
                         selectPictureButton.visible = true;

@@ -40,6 +40,7 @@ Item{
             var validatePictureRequest = Qt.createQmlObject('import com.imagemonkey.imagemonkey 1.0; ValidatePictureRequest{}',
                                                    restAPI);
             validatePictureRequest.set(internal.imageId, valid);
+            validatePictureRequest.setData(JSON.stringify({"label": label.label, "sublabel": label.sublabel}));
             internal.pendingRequests[validatePictureRequest.getUniqueRequestId()] = "validateImg";
             restAPI.post(validatePictureRequest);
         }
@@ -56,7 +57,14 @@ Item{
                         internal.imageId = data["uuid"];
 
                         if(internal.imageId !== ""){
-                            label.text = data["label"];
+                            label.label = data["label"];
+                            label.sublabel = data["sublabel"];
+
+                            if(label.sublabel === "")
+                                label.text = data["label"];
+                            else
+                                label.text = data["sublabel"] + "/" + data["label"];
+
                             img.source = ConnectionSettings.getBaseUrl() + "donation/" + internal.imageId;
                             img.visible = true;
                             error.visible = false;
@@ -89,6 +97,8 @@ Item{
 
     Text{
         id: label
+        property string label: "";
+        property string sublabel: "";
         anchors.top: parent.top
         anchors.topMargin: 5 * settings.pixelDensity
         anchors.horizontalCenter: parent.horizontalCenter
